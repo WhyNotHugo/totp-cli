@@ -32,6 +32,18 @@ You don't need to run `totp` from the command line if you just want to paste
 the code; you can run if from `dmenu`, or whatever your application launcher
 is.
 
+About pass entries
+------------------
+
+Pass entries are expected to have the TOTP secret in their first line (as
+provided by the third party).  
+The amount of digits token must have (for example, battle.net uses 8), must be
+provided in a separate line, with a format like:
+
+    Digits: 8
+
+For the moment, only customizing the token length is possible.
+
 Requirements
 ------------
 
