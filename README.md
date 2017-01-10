@@ -25,7 +25,7 @@ Usage
 
 For example:
 
-    $ totp generate github
+    $ totp github
     621787
 
 You don't need to run `totp` from the command line if you just want to paste
