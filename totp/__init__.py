@@ -41,10 +41,10 @@ def get_pass_entry(path):
 
 
 def copy_to_clipboard(text):
-    os.environ.get('PASSWORD_STORE_X_SELECTION', 'clipboard')
+    selection = os.environ.get('PASSWORD_STORE_X_SELECTION', 'clipboard')
     try:
         p = subprocess.Popen(
-            ['xclip'],
+            ['xclip', '-selection', selection],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
