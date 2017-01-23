@@ -1,6 +1,13 @@
 totp-cli
 ========
 
+.. image:: https://img.shields.io/pypi/v/totp.svg
+  :target: https://pypi.python.org/pypi/totp
+  :alt: version on pypi
+
+.. image:: https://img.shields.io/pypi/l/totp.svg
+  :alt: licence
+
 totp-cli is a simple command line application to generate OTP tokens for two
 factor authentication using RFC6238_.
 
