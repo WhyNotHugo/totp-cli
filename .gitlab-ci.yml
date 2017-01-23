@@ -1,0 +1,20 @@
+image: python:3.6
+stages:
+  - style
+  - deploy
+
+flake8:
+  stage: style
+  before_script:
+    - pip install flake8
+  script:
+    - flake8
+
+pypi:
+  stage: deploy
+  script:
+    - pip install twine wheel
+    - python setup.py sdist bdist_wheel
+    - twine upload --config-file .pypirc -u $PYPI_USER -p $PYPI_PASSWORD dist/*
+  only:
+    - tags@hobarrera/totp-cli
