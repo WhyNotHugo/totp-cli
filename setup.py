@@ -5,6 +5,7 @@ from setuptools import setup
 setup(
     name='totp',
     description='A cli based TOTP app.',
+    long_description=open('README.rst').read(),
     author='Hugo Osvaldo Barrera',
     author_email='hugo@barrera.io',
     url='https://gitlab.com/hobarrera/totp',
@@ -18,7 +19,6 @@ setup(
     install_requires=[
         open('requirements.txt').readlines()
     ],
-    # long_description=open('README.rst').read(),
     use_scm_version={
         'version_scheme': 'post-release',
         # 'write_to': 'totp/version.py',
