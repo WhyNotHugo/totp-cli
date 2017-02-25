@@ -6,6 +6,7 @@ import os
 import re
 import subprocess
 import sys
+import platform
 
 import onetimepass
 
@@ -41,20 +42,26 @@ def get_pass_entry(path):
 
 
 def copy_to_clipboard(text):
-    selection = os.environ.get('PASSWORD_STORE_X_SELECTION', 'clipboard')
     try:
+        if platform.system() == 'Darwin':
+            command = ['pbcopy']
+        elif platform.system() == 'Windows':
+            command = ['clip']
+        else:
+            selection = os.environ.get('PASSWORD_STORE_X_SELECTION', 'clipboard')
+            command = ['xclip', '-selection', selection]
+
         p = subprocess.Popen(
-            ['xclip', '-selection', selection],
+            command,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
+        p.stdin.write(text)
+        p.stdin.close()
+        p.wait()
     except FileNotFoundError:
-        print('xclip not found. Not copying code', file=sys.stderr)
-
-    p.stdin.write(text)
-    p.stdin.close()
-    p.wait()
+        print('{} not found. Not copying code'.format(command[0]), file=sys.stderr)
 
 
 def run():
