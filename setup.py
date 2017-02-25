@@ -1,6 +1,13 @@
 #!/usr/bin/env python3
 
 from setuptools import setup
+import sys
+
+if sys.version_info < (3, 3):
+    raise RuntimeError(
+        'totp-cli requires python >= 3.3, but this python is %d.%d' %
+        sys.version_info[0:2]
+    )
 
 setup(
     name='totp',

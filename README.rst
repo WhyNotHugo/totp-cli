@@ -60,7 +60,7 @@ Requirements
 
  * `pass <http://www.passwordstore.org/>`_
  * `xclip <http://sourceforge.net/projects/xclip>`_
- * `python <https://www.python.org/>`_
+ * `python >= 3.3 <https://www.python.org/>`_
 
 
 Installation
@@ -68,7 +68,7 @@ Installation
 
 Installation is quite simple:
 
-    $ pip install totp-cli
+    $ pip install totp
 
 There is also an `AUR package`_ available for ArchLinux users.
 
