@@ -13,12 +13,12 @@ factor authentication using RFC6238_.
 
 .. _RFC6238: http://tools.ietf.org/html/rfc6238
 
-These are compatible with many popular services such as facebook, github,
-google, eve-online, battle.net, etc.
+These are compatible with many popular services such as Facebook, GitHub,
+Google, eve-online, battle.net, etc.
 
 totp-cli fetches your shared key (aka: code) from pass_, generates the
 token, outputs it to stdout and copies it to your CLIPBOARD X selection.
-Default X selection can be overidden with the PASSWORD_STORE_X_SELECTION
+Default X selection can be overridden with the PASSWORD_STORE_X_SELECTION
 environment variable.
 
 Shared keys should be stored in your pass storage under ``2fa/SERVICE/code``,

@@ -3,10 +3,10 @@
 # Print a TOTP token getting the shared key from pass(1).
 
 import os
+import platform
 import re
 import subprocess
 import sys
-import platform
 
 import onetimepass
 
@@ -48,7 +48,10 @@ def copy_to_clipboard(text):
         elif platform.system() == 'Windows':
             command = ['clip']
         else:
-            selection = os.environ.get('PASSWORD_STORE_X_SELECTION', 'clipboard')
+            selection = os.environ.get(
+                'PASSWORD_STORE_X_SELECTION',
+                'clipboard',
+            )
             command = ['xclip', '-selection', selection]
 
         p = subprocess.Popen(
@@ -61,7 +64,10 @@ def copy_to_clipboard(text):
         p.stdin.close()
         p.wait()
     except FileNotFoundError:
-        print('{} not found. Not copying code'.format(command[0]), file=sys.stderr)
+        print(
+            '{} not found. Not copying code'.format(command[0]),
+            file=sys.stderr,
+        )
 
 
 def run():
