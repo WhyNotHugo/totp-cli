@@ -6,6 +6,7 @@ totp-cli
   :alt: version on pypi
 
 .. image:: https://img.shields.io/pypi/l/totp.svg
+  :target: https://gitlab.com/hobarrera/totp-cli/blob/master/LICENSE
   :alt: licence
 
 totp-cli is a simple command line application to generate OTP tokens for two
@@ -58,13 +59,13 @@ For the moment, only customizing the token length is possible.
 Requirements
 ------------
 
- * `pass <http://www.passwordstore.org/>`_
- * `python >= 3.3 <https://www.python.org/>`_
+* `pass <http://www.passwordstore.org/>`_
+* `python >= 3.3 <https://www.python.org/>`_
 
 There are also some platform-specific requirements for copying code into the
 clipboard:
 
- * `xclip <http://sourceforge.net/projects/xclip>`_ for Xorg (Linux/BSD).
+* `xclip <http://sourceforge.net/projects/xclip>`_ for Xorg (Linux/BSD).
 
 Installation
 ------------
@@ -79,12 +80,12 @@ There is also an `AUR package`_ available for ArchLinux users.
 
 You can also configure shell completion for totp-cli:
 
- * Bash
+* Bash: Download `totp-cli-completion.bash <contrib/totp-cli-completion.bash>`_
+  and source it from your bash configuration file (e.g. ``.bash_profile``)
 
-   * Download `totp-cli-completion.bash <contrib/totp-cli-completion.bash>`_ and source it from your bash configuration file (e.g. ``.bash_profile``)
- * Zsh
-
-   * Downlaod `totp-cli-completion.zsh <contrib/totp-cli-completion.zsh>`_ as ``_totp`` to site-functions directory (e.g. ``/usr/local/share/zsh/site-functions``)
+* Zsh: Download `totp-cli-completion.zsh <contrib/totp-cli-completion.zsh>`_ as
+  ``_totp`` to site-functions directory (e.g.
+  ``/usr/local/share/zsh/site-functions``)
 
 License
 -------
