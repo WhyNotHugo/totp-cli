@@ -59,9 +59,12 @@ Requirements
 ------------
 
  * `pass <http://www.passwordstore.org/>`_
- * `xclip <http://sourceforge.net/projects/xclip>`_
  * `python >= 3.3 <https://www.python.org/>`_
 
+There are also some platform-specific requirements for copying code into the
+clipboard:
+
+ * `xclip <http://sourceforge.net/projects/xclip>`_ for Xorg (Linux/BSD).
 
 Installation
 ------------
