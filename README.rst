@@ -74,6 +74,15 @@ There is also an `AUR package`_ available for ArchLinux users.
 
 .. _AUR package: https://aur.archlinux.org/packages/totp-cli/
 
+You can also configure shell completion for totp-cli:
+
+ * Bash
+
+   * Download `totp-cli-completion.bash <contrib/totp-cli-completion.bash>`_ and source it from your bash configuration file (e.g. ``.bash_profile``)
+ * Zsh
+
+   * Downlaod `totp-cli-completion.zsh <contrib/totp-cli-completion.zsh>`_ as ``_totp`` to site-functions directory (e.g. ``/usr/local/share/zsh/site-functions``)
+
 License
 -------
 
