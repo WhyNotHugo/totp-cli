@@ -8,6 +8,8 @@ import re
 import subprocess
 import sys
 
+import getpass
+
 import onetimepass
 
 
@@ -18,6 +20,33 @@ def get_length(pass_entry):
             return int(re.search('\d+', line).group())
 
     return 6
+
+
+def add_pass_entry(path):
+    """Add a new entry via pass."""
+    code_path = "2fa/{}/code"
+    code_path = code_path.format(path)
+
+    token_length = input('Token length [6]: ')
+    token_length = int(token_length) if token_length else 6
+
+    shared_key = getpass.getpass('Shared key: ')
+
+    pass_entry = "digits: {}\n{}".format(token_length, shared_key)
+
+    p = subprocess.Popen(
+        ['pass', 'insert', '-m', code_path],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+
+    pass_output, err = p.communicate(input=bytearray(pass_entry,encoding='utf-8'))
+
+    if len(err) > 0:
+        print("pass returned an error:")
+        print(err)
+        sys.exit(-1)
 
 
 def get_pass_entry(path):
@@ -71,18 +100,21 @@ def copy_to_clipboard(text):
 
 
 def run():
-    pass_entry = get_pass_entry(sys.argv[1])
+    if sys.argv[1] == '-a':
+        add_pass_entry(sys.argv[2])
+    else:
+        pass_entry = get_pass_entry(sys.argv[1])
 
-    # Remove the trailing newline or any other custom data users might have
-    # saved:
-    pass_entry = pass_entry.splitlines()
-    secret = pass_entry[0]
+        # Remove the trailing newline or any other custom data users might have
+        # saved:
+        pass_entry = pass_entry.splitlines()
+        secret = pass_entry[0]
 
-    digits = get_length(pass_entry)
-    token = onetimepass.get_totp(secret, as_string=True, token_length=digits)
+        digits = get_length(pass_entry)
+        token = onetimepass.get_totp(secret, as_string=True, token_length=digits)
 
-    print(token.decode())
-    copy_to_clipboard(token)
+        print(token.decode())
+        copy_to_clipboard(token)
 
 
 if __name__ == '__main__':
