@@ -99,22 +99,27 @@ def copy_to_clipboard(text):
         )
 
 
+def generate_token(path):
+    """Generate the TOTP token for the given path"""
+    pass_entry = get_pass_entry(path)
+
+    # Remove the trailing newline or any other custom data users might have
+    # saved:
+    pass_entry = pass_entry.splitlines()
+    secret = pass_entry[0]
+
+    digits = get_length(pass_entry)
+    token = onetimepass.get_totp(secret, as_string=True, token_length=digits)
+
+    print(token.decode())
+    copy_to_clipboard(token)
+
+
 def run():
     if sys.argv[1] == '-a':
         add_pass_entry(sys.argv[2])
     else:
-        pass_entry = get_pass_entry(sys.argv[1])
-
-        # Remove the trailing newline or any other custom data users might have
-        # saved:
-        pass_entry = pass_entry.splitlines()
-        secret = pass_entry[0]
-
-        digits = get_length(pass_entry)
-        token = onetimepass.get_totp(secret, as_string=True, token_length=digits)
-
-        print(token.decode())
-        copy_to_clipboard(token)
+        generate_token(sys.argv[1])
 
 
 if __name__ == '__main__':
