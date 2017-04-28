@@ -35,7 +35,7 @@ def add_pass_entry(path):
     pass_entry = "{}\ndigits: {}\n".format(shared_key, token_length)
 
     p = subprocess.Popen(
-        ['pass', 'insert', '-m', code_path],
+        ['pass', 'insert', '-m', '-f', code_path],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
