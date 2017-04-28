@@ -32,7 +32,7 @@ def add_pass_entry(path):
 
     shared_key = getpass.getpass('Shared key: ')
 
-    pass_entry = "digits: {}\n{}".format(token_length, shared_key)
+    pass_entry = "{}\ndigits: {}\n".format(shared_key, token_length)
 
     p = subprocess.Popen(
         ['pass', 'insert', '-m', code_path],
