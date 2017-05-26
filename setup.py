@@ -15,7 +15,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Hugo Osvaldo Barrera',
     author_email='hugo@barrera.io',
-    url='https://gitlab.com/hobarrera/totp',
+    url='https://github.com/hobarrera/totp',
     license='MIT',
     packages=['totp'],
     entry_points={
