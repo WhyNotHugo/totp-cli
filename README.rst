@@ -6,7 +6,7 @@ totp-cli
   :alt: version on pypi
 
 .. image:: https://img.shields.io/pypi/l/totp.svg
-  :target: https://github.com/hobarrera/totp-cli/blob/master/LICENSE
+  :target: https://github.com/hobarrera/totp-cli/blob/master/LICENCE
   :alt: licence
 
 totp-cli is a simple command line application to generate OTP tokens for two
@@ -104,7 +104,7 @@ You can also configure shell completion for totp-cli:
 License
 -------
 
-totp-cli is distrbuted under the terms of the ISC license. See LICENSE for
+totp-cli is distrbuted under the terms of the ISC licence. See LICENCE for
 details.
 
 Copyright (c) 2014-2017 Hugo Osvaldo Barrera <hugo@barrera.io>
