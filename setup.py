@@ -17,7 +17,7 @@ setup(
     author='Hugo Osvaldo Barrera',
     author_email='hugo@barrera.io',
     url='https://github.com/hobarrera/totp',
-    license='MIT',
+    license='ISC',
     packages=['totp'],
     entry_points={
         'console_scripts': [
