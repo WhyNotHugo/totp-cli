@@ -6,7 +6,7 @@ totp-cli
   :alt: version on pypi
 
 .. image:: https://img.shields.io/pypi/l/totp.svg
-  :target: https://gitlab.com/hobarrera/totp-cli/blob/master/LICENSE
+  :target: https://github.com/hobarrera/totp-cli/blob/master/LICENSE
   :alt: licence
 
 totp-cli is a simple command line application to generate OTP tokens for two

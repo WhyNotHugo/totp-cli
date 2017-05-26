@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from setuptools import setup
 import sys
+
+from setuptools import setup
 
 if sys.version_info < (3, 3):
     raise RuntimeError(
@@ -15,7 +16,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Hugo Osvaldo Barrera',
     author_email='hugo@barrera.io',
-    url='https://gitlab.com/hobarrera/totp',
+    url='https://github.com/hobarrera/totp',
     license='MIT',
     packages=['totp'],
     entry_points={

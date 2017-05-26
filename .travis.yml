@@ -1,0 +1,31 @@
+sudo: false
+language: python
+cache: pip
+
+python: 3.6
+
+install:
+  - pip install flake8 flake8-import-order
+
+script:
+  - flake8
+
+before_deploy:
+  - pip install wheel
+  - python setup.py sdist bdist_wheel
+
+deploy:
+  - provider: pypi
+    user: $PYPI_USERNAME
+    password: $PYPI_PASSWORD
+    on:
+      tags: true
+    distributions: "sdist bdist_wheel"
+  - provider: releases
+    api_key: $GITHUB_OAUTH_TOKEN
+    file_glob: true
+    file: dist/*
+    skip_cleanup: true
+    on:
+      tags: true
+    distributions: "sdist bdist_wheel"
