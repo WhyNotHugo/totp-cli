@@ -2,13 +2,12 @@
 #
 # Print a TOTP token getting the shared key from pass(1).
 
+import getpass
 import os
 import platform
 import re
 import subprocess
 import sys
-
-import getpass
 
 import onetimepass
 
@@ -41,7 +40,9 @@ def add_pass_entry(path):
         stderr=subprocess.PIPE
     )
 
-    pass_output, err = p.communicate(input=bytearray(pass_entry,encoding='utf-8'))
+    pass_output, err = p.communicate(
+        input=bytearray(pass_entry, encoding='utf-8')
+    )
 
     if len(err) > 0:
         print("pass returned an error:")
