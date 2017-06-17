@@ -100,8 +100,11 @@ def copy_to_clipboard(text):
         )
 
 
-def generate_token(path):
-    """Generate the TOTP token for the given path"""
+def generate_token(path, seconds=0):
+    """Generate the TOTP token for the given path and the given time offset"""
+    import time
+    clock = time.time() + float(seconds)
+
     pass_entry = get_pass_entry(path)
 
     # Remove the trailing newline or any other custom data users might have
@@ -110,7 +113,8 @@ def generate_token(path):
     secret = pass_entry[0]
 
     digits = get_length(pass_entry)
-    token = onetimepass.get_totp(secret, as_string=True, token_length=digits)
+    token = onetimepass.get_totp(secret, as_string=True, token_length=digits,
+                                 clock=clock)
 
     print(token.decode())
     copy_to_clipboard(token)
@@ -119,6 +123,8 @@ def generate_token(path):
 def run():
     if sys.argv[1] == '-a':
         add_pass_entry(sys.argv[2])
+    elif sys.argv[1] == '-s':
+        generate_token(sys.argv[3], seconds=sys.argv[2])
     else:
         generate_token(sys.argv[1])
 

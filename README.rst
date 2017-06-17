@@ -41,8 +41,19 @@ For example::
     621787
 
 You don't need to run ``totp`` from the command line if you just want to paste
-the code; you can run if from ``dmenu``, or whatever your application launcher
+the code; you can run it from ``dmenu``, or whatever your application launcher
 is.
+
+To offset the clock by a number of seconds::
+
+    totp -s SECONDS SERVICE
+
+For example::
+
+    $ totp -s +60 github
+    735092
+    $ totp -s -90 github
+    909651
 
 To add a service::
 
