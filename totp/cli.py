@@ -22,6 +22,7 @@ def _parse_args(args):
     )
 
     subparsers = parser.add_subparsers(dest='command')
+    aliases = {}
 
     for name, (_args, kwargs, func) in _subcommands.items():
         _parser = subparsers.add_parser(name, **kwargs)
@@ -29,10 +30,20 @@ def _parse_args(args):
         for arg in _args:
             _parser.add_argument(*arg.args, **arg.kwargs)
 
+        _aliases = kwargs.get('aliases', ())
+        for alias in _aliases:
+            aliases[alias] = name
+
+    def replace_aliases(args, aliases):
+        for i, arg in enumerate(args):
+            if arg in aliases:
+                args[i] = aliases[arg]
+
     def add_default_subcommand_if_omitted(args, default):
         if not any(arg in ('-h', '--help') or arg in subparsers.choices for arg in args):
             args.insert(0, default)
 
+    replace_aliases(args, aliases)
     add_default_subcommand_if_omitted(args, 'show')
 
     return parser.parse_args(args)
@@ -47,6 +58,7 @@ def run():
 @subcommand('add',
     argument('identifier',
         help='the identifier under the \'2fa\' folder where the key should be saved'),
+    aliases=['-a'],
     description='Add a new TOTP entry to the database.',
     help='add a new TOTP entry to the database')
 def _cmd_add(args):
