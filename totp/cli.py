@@ -1,4 +1,5 @@
 import argparse
+import getpass
 import sys
 from collections import OrderedDict, defaultdict, namedtuple
 from functools import reduce
@@ -52,6 +53,9 @@ def run():
     args = _parse_args(sys.argv[1:])
     try:
         args.func(args)
+    except totp.BackendError as e:
+        print('%s returned an error:\n%s' % (e.backend_name, e.msg))
+        raise SystemExit(-1)
     except KeyboardInterrupt:
         print()
 
@@ -62,7 +66,15 @@ def run():
     description='Add a new TOTP entry to the database.',
     help='add a new TOTP entry to the database')
 def _cmd_add(args):
-    totp.add_pass_entry(args.identifier)
+    add_interactive(args.identifier)
+
+def add_interactive(path):
+    token_length = input('Token length [6]: ')
+    token_length = int(token_length) if token_length else 6
+
+    shared_key = getpass.getpass('Shared key: ')
+
+    totp.add_pass_entry(path, token_length, shared_key)
 
 @subcommand('show',
     argument('-s', dest='offset_seconds', metavar='SECONDS', default=0,

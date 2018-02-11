@@ -2,7 +2,6 @@
 #
 # Print a TOTP token getting the shared key from pass(1).
 
-import getpass
 import os
 import platform
 import re
@@ -11,6 +10,24 @@ import sys
 
 import onetimepass
 
+
+class BackendError(Exception):
+    backend_name = '<none>'
+
+    def __init__(self, msg):
+        self.msg = msg
+
+class PassBackendError(BackendError):
+    backend_name = 'pass'
+
+
+def _read_backend_error(err):
+    if isinstance(err, bytes):
+        try:
+            err = err.decode('utf-8')
+        except UnicodeDecodeError:
+            return bytestr
+    return err.rstrip('\n')
 
 def get_length(pass_entry):
     """Return the required token length."""
@@ -21,15 +38,10 @@ def get_length(pass_entry):
     return 6
 
 
-def add_pass_entry(path):
+def add_pass_entry(path, token_length, shared_key):
     """Add a new entry via pass."""
     code_path = "2fa/{}/code"
     code_path = code_path.format(path)
-
-    token_length = input('Token length [6]: ')
-    token_length = int(token_length) if token_length else 6
-
-    shared_key = getpass.getpass('Shared key: ')
 
     pass_entry = "{}\ndigits: {}\n".format(shared_key, token_length)
 
@@ -45,9 +57,7 @@ def add_pass_entry(path):
     )
 
     if len(err) > 0:
-        print("pass returned an error:")
-        print(err)
-        sys.exit(-1)
+        raise PassBackendError(_read_backend_error(err))
 
 
 def get_pass_entry(path):
@@ -64,9 +74,7 @@ def get_pass_entry(path):
     pass_output, err = p.communicate()
 
     if len(err) > 0:
-        print("pass returned an error:")
-        print(err)
-        sys.exit(-1)
+        raise PassBackendError(_read_backend_error(err))
 
     return pass_output.decode()
 
