@@ -118,16 +118,3 @@ def generate_token(path, seconds=0):
 
     print(token.decode())
     copy_to_clipboard(token)
-
-
-def run():
-    if sys.argv[1] == '-a':
-        add_pass_entry(sys.argv[2])
-    elif sys.argv[1] == '-s':
-        generate_token(sys.argv[3], seconds=sys.argv[2])
-    else:
-        generate_token(sys.argv[1])
-
-
-if __name__ == '__main__':
-    run()

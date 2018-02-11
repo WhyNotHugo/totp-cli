@@ -21,7 +21,7 @@ setup(
     packages=['totp'],
     entry_points={
         'console_scripts': [
-            'totp = totp:run',
+            'totp = totp.cli:run',
         ]
     },
     install_requires=[
