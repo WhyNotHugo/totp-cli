@@ -7,8 +7,12 @@ import platform
 import re
 import subprocess
 import sys
+import urllib.parse
 
 import onetimepass
+
+
+DIGITS_DEFAULT = 6
 
 
 class BackendError(Exception):
@@ -29,6 +33,17 @@ def _read_backend_error(err):
             return bytestr
     return err.rstrip('\n')
 
+
+class ValidationError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+def validate(*args):
+    for (validator, error_message) in args:
+        if not validator():
+            raise ValidationError(error_message)
+
+
 def get_length(pass_entry):
     """Return the required token length."""
     for line in pass_entry:
@@ -36,6 +51,11 @@ def get_length(pass_entry):
             return int(re.search('\d+', line).group())
 
     return 6
+
+
+def add_pass_entry_from_uri(path, uri):
+    parsed = parse_otpauth_uri(uri)
+    add_pass_entry(path, parsed['digits'], parsed['secret'])
 
 
 def add_pass_entry(path, token_length, shared_key):
@@ -126,3 +146,32 @@ def generate_token(path, seconds=0):
 
     print(token.decode())
     copy_to_clipboard(token)
+
+
+def parse_otpauth_uri(uri):
+    parsed = urllib.parse.urlsplit(uri)
+    query = urllib.parse.parse_qs(parsed.query)
+
+    secret = query.get('secret', [])
+    digits = query.get('digits', [])
+    issuer = query.get('issuer', [])
+
+    validate(
+        (lambda: parsed.scheme == 'otpauth', 'invalid URI scheme: %s' % parsed.scheme),
+        (lambda: parsed.netloc == 'totp', 'unsupported key type: %s' % parsed.netloc),
+        (lambda: len(secret) <= 1, 'too many \'secret\' arguments'),
+        (lambda: len(digits) <= 1, 'too many \'digits\' arguments'),
+        (lambda: len(issuer) <= 1, 'too many \'issuer\' arguments'),
+        (lambda: len(secret) == 1, 'no secret found'),
+    )
+
+    secret, = secret
+    issuer = issuer[0] if issuer else None
+    digits = int(digits[0]) if digits else DIGITS_DEFAULT
+
+    return {
+        'secret': secret,
+        'digits': digits,
+        'issuer': issuer,
+        'label': parsed.path.lstrip('/'),
+    }

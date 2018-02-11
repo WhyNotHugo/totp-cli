@@ -62,19 +62,27 @@ def run():
 @subcommand('add',
     argument('identifier',
         help='the identifier under the \'2fa\' folder where the key should be saved'),
+    argument('-u', '--uri',
+        help='an optional otpauth uri to read the entry data from'),
     aliases=['-a'],
     description='Add a new TOTP entry to the database.',
     help='add a new TOTP entry to the database')
 def _cmd_add(args):
-    add_interactive(args.identifier)
+    if args.uri:
+        add_uri(args.identifier, args.uri)
+    else:
+        add_interactive(args.identifier)
 
 def add_interactive(path):
-    token_length = input('Token length [6]: ')
-    token_length = int(token_length) if token_length else 6
+    token_length = input('Token length [%d]: ' % totp.DIGITS_DEFAULT)
+    token_length = int(token_length) if token_length else totp.DIGITS_DEFAULT
 
     shared_key = getpass.getpass('Shared key: ')
 
     totp.add_pass_entry(path, token_length, shared_key)
+
+def add_uri(path, uri):
+    totp.add_pass_entry_from_uri(path, uri)
 
 @subcommand('show',
     argument('-s', dest='offset_seconds', metavar='SECONDS', default=0,
