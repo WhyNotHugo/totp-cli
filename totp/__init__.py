@@ -128,6 +128,16 @@ def copy_to_clipboard(text):
         )
 
 
+def normalize_secret(secret):
+    s = secret.replace(' ', '')
+
+    if len(s) % 8 != 0:
+        missing = 8 - (len(s) % 8)
+        s += '=' * missing
+
+    return s
+
+
 def generate_token(path, seconds=0):
     """Generate the TOTP token for the given path and the given time offset"""
     import time
@@ -138,7 +148,7 @@ def generate_token(path, seconds=0):
     # Remove the trailing newline or any other custom data users might have
     # saved:
     pass_entry = pass_entry.splitlines()
-    secret = pass_entry[0]
+    secret = normalize_secret(pass_entry[0])
 
     digits = get_length(pass_entry)
     token = onetimepass.get_totp(secret, as_string=True, token_length=digits,
