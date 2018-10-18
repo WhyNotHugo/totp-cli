@@ -108,6 +108,7 @@ def copy_to_clipboard(text):
             file=sys.stderr,
         )
 
+
 def return_secret(pass_entry):
     pass_length = len(pass_entry)
     if pass_length % 8 == 0:
@@ -115,8 +116,9 @@ def return_secret(pass_entry):
         return secret
     else:
         closestmultiple = 8 * (int(pass_length / 8) + (pass_length % 8 > 0))
-        secret = pass_entry.ljust(closestmultiple,'=')
+        secret = pass_entry.ljust(closestmultiple, '=')
         return secret
+
 
 def generate_token(path, seconds=0):
     """Generate the TOTP token for the given path and the given time offset"""
@@ -138,12 +140,14 @@ def generate_token(path, seconds=0):
     print("The totp token for " + sys.argv[1] + " is:\n" + token.decode())
     copy_to_clipboard(token)
 
+
 def help():
     print("Usage: totp [option] service")
     print("Options:")
     print("-a          : Add the named service to pass")
     print("-h          : This help")
     print("-s -/+[sec] : Add an offset to the time.")
+
 
 def run():
     if len(sys.argv) == 1:
