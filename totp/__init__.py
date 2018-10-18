@@ -137,7 +137,7 @@ def generate_token(path, seconds=0):
     token = onetimepass.get_totp(secret, as_string=True, token_length=digits,
                                  clock=clock)
 
-    print("The totp token for " + sys.argv[1] + " is:\n" + token.decode())
+    print(token.decode())
     copy_to_clipboard(token)
 
 
