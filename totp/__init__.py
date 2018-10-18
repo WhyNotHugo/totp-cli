@@ -33,7 +33,7 @@ def add_pass_entry(path):
     while True:
         try:
             shared_key = return_secret(getpass.getpass('Shared key: '))
-            b32decode(shared_key)
+            b32decode(shared_key.upper())
             if shared_key == "":
                 raise ValueError('The key entered was empty')
             break
