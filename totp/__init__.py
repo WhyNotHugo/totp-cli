@@ -8,6 +8,7 @@ import platform
 import re
 import subprocess
 import sys
+from base64 import b32decode
 
 import onetimepass
 
@@ -29,7 +30,15 @@ def add_pass_entry(path):
     token_length = input('Token length [6]: ')
     token_length = int(token_length) if token_length else 6
 
-    shared_key = getpass.getpass('Shared key: ')
+    while True:
+        try:
+            shared_key = return_secret(getpass.getpass('Shared key: '))
+            b32decode(shared_key.upper())
+            if shared_key == "":
+                raise ValueError('The key entered was empty')
+            break
+        except ValueError as err:
+            print(err.args)
 
     pass_entry = "{}\ndigits: {}\n".format(shared_key, token_length)
 
@@ -51,7 +60,7 @@ def add_pass_entry(path):
 
 
 def get_pass_entry(path):
-    """Return the entrie entry as provided via pass."""
+    """Return the entire entry as provided via pass."""
     code_path = "2fa/{}/code"
     code_path = code_path.format(path)
 
@@ -100,6 +109,17 @@ def copy_to_clipboard(text):
         )
 
 
+def return_secret(pass_entry):
+    pass_length = len(pass_entry)
+    if pass_length % 8 == 0:
+        secret = pass_entry
+        return secret
+    else:
+        closestmultiple = 8 * (int(pass_length / 8) + (pass_length % 8 > 0))
+        secret = pass_entry.ljust(closestmultiple, '=')
+        return secret
+
+
 def generate_token(path, seconds=0):
     """Generate the TOTP token for the given path and the given time offset"""
     import time
@@ -110,7 +130,8 @@ def generate_token(path, seconds=0):
     # Remove the trailing newline or any other custom data users might have
     # saved:
     pass_entry = pass_entry.splitlines()
-    secret = pass_entry[0]
+
+    secret = return_secret(pass_entry[0])
 
     digits = get_length(pass_entry)
     token = onetimepass.get_totp(secret, as_string=True, token_length=digits,
@@ -120,11 +141,23 @@ def generate_token(path, seconds=0):
     copy_to_clipboard(token)
 
 
+def help():
+    print("Usage: totp [option] service")
+    print("Options:")
+    print("-a          : Add the named service to pass")
+    print("-h          : This help")
+    print("-s -/+[sec] : Add an offset to the time.")
+
+
 def run():
-    if sys.argv[1] == '-a':
+    if len(sys.argv) == 1:
+        help()
+    elif sys.argv[1] == '-a':
         add_pass_entry(sys.argv[2])
     elif sys.argv[1] == '-s':
         generate_token(sys.argv[3], seconds=sys.argv[2])
+    elif sys.argv[1] == '-h':
+        help()
     else:
         generate_token(sys.argv[1])
 
