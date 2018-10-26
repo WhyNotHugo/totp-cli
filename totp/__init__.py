@@ -17,7 +17,7 @@ def get_length(pass_entry):
     """Return the required token length."""
     for line in pass_entry:
         if line.lower().startswith('digits:'):
-            return int(re.search('\d+', line).group())
+            return int(re.search(r'\d+', line).group())
 
     return 6
 
