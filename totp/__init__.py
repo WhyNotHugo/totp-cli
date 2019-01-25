@@ -48,7 +48,7 @@ def get_length(pass_entry):
     """Return the required token length."""
     for line in pass_entry:
         if line.lower().startswith('digits:'):
-            return int(re.search('\d+', line).group())
+            return int(re.search(r'\d+', line).group())
 
     return 6
 
@@ -81,7 +81,7 @@ def add_pass_entry(path, token_length, shared_key):
 
 
 def get_pass_entry(path):
-    """Return the entrie entry as provided via pass."""
+    """Return the entire entry as provided via pass."""
     code_path = "2fa/{}/code"
     code_path = code_path.format(path)
 
