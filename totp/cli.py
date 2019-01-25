@@ -59,10 +59,14 @@ def run():
     except KeyboardInterrupt:
         print()
 
-@subcommand('add',
-    argument('identifier',
+@subcommand(
+    'add',
+    argument(
+        'identifier',
         help='the identifier under the \'2fa\' folder where the key should be saved'),
-    argument('-u', '--uri',
+    argument(
+        '-u',
+        '--uri',
         help='an optional otpauth uri to read the entry data from'),
     aliases=['-a'],
     description='Add a new TOTP entry to the database.',
@@ -95,10 +99,16 @@ def add_interactive(path):
 def add_uri(path, uri):
     totp.add_pass_entry_from_uri(path, uri)
 
-@subcommand('show',
-    argument('-s', dest='offset_seconds', metavar='SECONDS', default=0,
+@subcommand(
+    'show',
+    argument(
+        '-s',
+        dest='offset_seconds',
+        metavar='SECONDS',
+        default=0,
         help='offset the clock by the given number of seconds'),
-    argument('identifier',
+    argument(
+        'identifier',
         help='the identifier by which the key can be found under the \'2fa\' folder'),
     description='Show the current TOTP token for a registered entry.',
     help='(default action) show the current TOTP token for a registered entry')
