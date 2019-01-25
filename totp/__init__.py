@@ -18,25 +18,15 @@ DIGITS_DEFAULT = 6
 class BackendError(Exception):
     backend_name = '<none>'
 
-    def __init__(self, msg):
-        self.msg = msg
-
 class PassBackendError(BackendError):
     backend_name = 'pass'
 
+    def __init__(self, err):
+        if isinstance(err, bytes):
+            err = err.decode('utf-8', 'replace')
+        super().__init__(err.rstrip('\n'))
 
-def _read_backend_error(err):
-    if isinstance(err, bytes):
-        try:
-            err = err.decode('utf-8')
-        except UnicodeDecodeError:
-            return bytestr
-    return err.rstrip('\n')
-
-
-class ValidationError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
+class ValidationError(Exception): pass
 
 def validate(*args):
     for (validator, error_message) in args:
@@ -77,7 +67,7 @@ def add_pass_entry(path, token_length, shared_key):
     )
 
     if len(err) > 0:
-        raise PassBackendError(_read_backend_error(err))
+        raise PassBackendError(err)
 
 
 def get_pass_entry(path):
@@ -94,7 +84,7 @@ def get_pass_entry(path):
     pass_output, err = p.communicate()
 
     if len(err) > 0:
-        raise PassBackendError(_read_backend_error(err))
+        raise PassBackendError(err)
 
     return pass_output.decode()
 

@@ -54,7 +54,7 @@ def run():
     try:
         args.func(args)
     except totp.BackendError as e:
-        print('%s returned an error:\n%s' % (e.backend_name, e.msg))
+        print('%s returned an error:\n%s' % (e.backend_name, e))
         raise SystemExit(-1)
     except KeyboardInterrupt:
         print()
