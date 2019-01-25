@@ -132,8 +132,8 @@ def normalize_secret(secret):
     s = secret.replace(' ', '')
 
     if len(s) % 8 != 0:
-        missing = 8 - (len(s) % 8)
-        s += '=' * missing
+        num_needed_padding_chars = 8 - (len(s) % 8)
+        s += '=' * num_needed_padding_chars
 
     return s
 
