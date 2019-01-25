@@ -73,11 +73,22 @@ def _cmd_add(args):
     else:
         add_interactive(args.identifier)
 
+def input_shared_key():
+    while True:
+        try:
+            shared_key = totp.normalize_secret(getpass.getpass('Shared key: '))
+            b32decode(shared_key.upper())
+            if shared_key == "":
+                raise ValueError('The key entered was empty')
+            return shared_key
+        except ValueError as err:
+            print(*err.args)
+
 def add_interactive(path):
     token_length = input('Token length [%d]: ' % totp.DIGITS_DEFAULT)
     token_length = int(token_length) if token_length else totp.DIGITS_DEFAULT
 
-    shared_key = getpass.getpass('Shared key: ')
+    shared_key = input_shared_key()
 
     totp.add_pass_entry(path, token_length, shared_key)
 
