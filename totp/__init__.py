@@ -2,15 +2,36 @@
 #
 # Print a TOTP token getting the shared key from pass(1).
 
-import getpass
 import os
 import platform
 import re
 import subprocess
 import sys
-from base64 import b32decode
+import urllib.parse
 
 import onetimepass
+
+
+DIGITS_DEFAULT = 6
+
+
+class BackendError(Exception):
+    backend_name = '<none>'
+
+class PassBackendError(BackendError):
+    backend_name = 'pass'
+
+    def __init__(self, err):
+        if isinstance(err, bytes):
+            err = err.decode('utf-8', 'replace')
+        super().__init__(err.rstrip('\n'))
+
+class ValidationError(Exception): pass
+
+def validate(*args):
+    for (validator, error_message) in args:
+        if not validator():
+            raise ValidationError(error_message)
 
 
 def get_length(pass_entry):
@@ -22,23 +43,15 @@ def get_length(pass_entry):
     return 6
 
 
-def add_pass_entry(path):
+def add_pass_entry_from_uri(path, uri):
+    parsed = parse_otpauth_uri(uri)
+    add_pass_entry(path, parsed['digits'], parsed['secret'])
+
+
+def add_pass_entry(path, token_length, shared_key):
     """Add a new entry via pass."""
     code_path = "2fa/{}/code"
     code_path = code_path.format(path)
-
-    token_length = input('Token length [6]: ')
-    token_length = int(token_length) if token_length else 6
-
-    while True:
-        try:
-            shared_key = return_secret(getpass.getpass('Shared key: '))
-            b32decode(shared_key.upper())
-            if shared_key == "":
-                raise ValueError('The key entered was empty')
-            break
-        except ValueError as err:
-            print(err.args)
 
     pass_entry = "{}\ndigits: {}\n".format(shared_key, token_length)
 
@@ -54,9 +67,7 @@ def add_pass_entry(path):
     )
 
     if len(err) > 0:
-        print("pass returned an error:")
-        print(err)
-        sys.exit(-1)
+        raise PassBackendError(err)
 
 
 def get_pass_entry(path):
@@ -73,9 +84,7 @@ def get_pass_entry(path):
     pass_output, err = p.communicate()
 
     if len(err) > 0:
-        print("pass returned an error:")
-        print(err)
-        sys.exit(-1)
+        raise PassBackendError(err)
 
     return pass_output.decode()
 
@@ -109,15 +118,14 @@ def copy_to_clipboard(text):
         )
 
 
-def return_secret(pass_entry):
-    pass_length = len(pass_entry)
-    if pass_length % 8 == 0:
-        secret = pass_entry
-        return secret
-    else:
-        closestmultiple = 8 * (int(pass_length / 8) + (pass_length % 8 > 0))
-        secret = pass_entry.ljust(closestmultiple, '=')
-        return secret
+def normalize_secret(secret):
+    s = secret.replace(' ', '')
+
+    if len(s) % 8 != 0:
+        num_needed_padding_chars = 8 - (len(s) % 8)
+        s += '=' * num_needed_padding_chars
+
+    return s
 
 
 def generate_token(path, seconds=0):
@@ -130,8 +138,7 @@ def generate_token(path, seconds=0):
     # Remove the trailing newline or any other custom data users might have
     # saved:
     pass_entry = pass_entry.splitlines()
-
-    secret = return_secret(pass_entry[0])
+    secret = normalize_secret(pass_entry[0])
 
     digits = get_length(pass_entry)
     token = onetimepass.get_totp(secret, as_string=True, token_length=digits,
@@ -141,26 +148,30 @@ def generate_token(path, seconds=0):
     copy_to_clipboard(token)
 
 
-def help():
-    print("Usage: totp [option] service")
-    print("Options:")
-    print("-a          : Add the named service to pass")
-    print("-h          : This help")
-    print("-s -/+[sec] : Add an offset to the time.")
+def parse_otpauth_uri(uri):
+    parsed = urllib.parse.urlsplit(uri)
+    query = urllib.parse.parse_qs(parsed.query)
 
+    secret = query.get('secret', [])
+    digits = query.get('digits', [])
+    issuer = query.get('issuer', [])
 
-def run():
-    if len(sys.argv) == 1:
-        help()
-    elif sys.argv[1] == '-a':
-        add_pass_entry(sys.argv[2])
-    elif sys.argv[1] == '-s':
-        generate_token(sys.argv[3], seconds=sys.argv[2])
-    elif sys.argv[1] == '-h':
-        help()
-    else:
-        generate_token(sys.argv[1])
+    validate(
+        (lambda: parsed.scheme == 'otpauth', 'invalid URI scheme: %s' % parsed.scheme),
+        (lambda: parsed.netloc == 'totp', 'unsupported key type: %s' % parsed.netloc),
+        (lambda: len(secret) <= 1, 'too many \'secret\' arguments'),
+        (lambda: len(digits) <= 1, 'too many \'digits\' arguments'),
+        (lambda: len(issuer) <= 1, 'too many \'issuer\' arguments'),
+        (lambda: len(secret) == 1, 'no secret found'),
+    )
 
+    secret, = secret
+    issuer = issuer[0] if issuer else None
+    digits = int(digits[0]) if digits else DIGITS_DEFAULT
 
-if __name__ == '__main__':
-    run()
+    return {
+        'secret': secret,
+        'digits': digits,
+        'issuer': issuer,
+        'label': parsed.path.lstrip('/'),
+    }

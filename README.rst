@@ -23,8 +23,8 @@ Default X selection can be overridden with the PASSWORD_STORE_X_SELECTION
 environment variable.
 
 Shared keys should be stored in your pass storage under ``2fa/SERVICE/code``,
-for example ``2fa/github/code``. The ``-a`` flag can be used to add this less
-painfully
+for example ``2fa/github/code``. The ``-a`` flag (or alternatively the ``add``
+subcommand) can be used to add this less painfully.
 
 .. _pass: http://www.passwordstore.org/
 
@@ -58,6 +58,8 @@ For example::
 To add a service::
 
     totp -a SERVICE
+    # OR
+    totp add SERVICE
 
 For example::
 
