@@ -1,6 +1,7 @@
 import argparse
 import getpass
 import sys
+from base64 import b32decode
 from collections import OrderedDict, defaultdict, namedtuple
 from functools import reduce
 
