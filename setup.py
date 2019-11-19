@@ -16,7 +16,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Hugo Osvaldo Barrera',
     author_email='hugo@barrera.io',
-    url='https://github.com/hobarrera/totp',
+    url='https://github.com/WhyNotHugo/totp-cli/',
     license='ISC',
     packages=['totp'],
     entry_points={
