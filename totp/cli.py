@@ -116,5 +116,21 @@ def add_uri(path, uri):
 def _cmd_show(args):
     totp.generate_token(args.identifier, seconds=args.offset_seconds)
 
+@subcommand(
+    'show-only',
+    argument(
+        '-S',
+        dest='offset_seconds',
+        metavar='SECONDS',
+        default=0,
+        help='offset the clock by the given number of seconds'),
+    argument(
+        'identifier',
+        help='the identifier by which the key can be found under the \'2fa\' folder'),
+    description='Show the current TOTP token for a registered entry - don\'t copy to clipboard',
+    help='show the current TOTP token for a registered entry - don\'t copy to clipboard')
+def _cmd_show(args):
+    totp.generate_token(args.identifier, seconds=args.offset_seconds, to_clipboard=False)
+
 if __name__ == '__main__':
     run()
