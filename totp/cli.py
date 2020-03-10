@@ -111,7 +111,7 @@ def add_uri(path, uri):
     argument(
         '-n', '--nocopy',
         action="store_true",
-        help='Show the current TOTP token for a registered entry - don\'t copy to clipboard'),
+        help='Do not copy the token, only show it.'),
     argument(
         'identifier',
         help='the identifier by which the key can be found under the \'2fa\' folder'),
