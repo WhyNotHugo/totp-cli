@@ -128,7 +128,7 @@ def normalize_secret(secret):
     return s
 
 
-def generate_token(path, seconds=0):
+def generate_token(path, seconds=0, to_clipboard=True):
     """Generate the TOTP token for the given path and the given time offset"""
     import time
     clock = time.time() + float(seconds)
@@ -145,7 +145,9 @@ def generate_token(path, seconds=0):
                                  clock=clock)
 
     print(token.decode())
-    copy_to_clipboard(token)
+
+    if to_clipboard:
+        copy_to_clipboard(token)
 
 
 def parse_otpauth_uri(uri):
