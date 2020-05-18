@@ -70,6 +70,12 @@ For example::
 Note that if the service already exists, it will be overwritten without
 warning.
 
+To output without copying to the clipboard:
+
+    $ totp -n SERVICE
+    # OR
+    $ totp --nocopy SERVICE
+
 
 About pass entries
 ------------------
