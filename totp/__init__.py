@@ -66,7 +66,7 @@ def add_pass_entry(path, token_length, shared_key):
         input=bytearray(pass_entry, encoding='utf-8')
     )
 
-    if len(err) > 0:
+    if p.returncode != 0:
         raise PassBackendError(err)
 
 
@@ -83,7 +83,7 @@ def get_pass_entry(path):
 
     pass_output, err = p.communicate()
 
-    if len(err) > 0:
+    if p.returncode != 0:
         raise PassBackendError(err)
 
     return pass_output.decode()
