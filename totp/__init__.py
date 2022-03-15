@@ -96,11 +96,19 @@ def copy_to_clipboard(text):
         elif platform.system() == 'Windows':
             command = ['clip']
         else:
-            selection = os.environ.get(
-                'PASSWORD_STORE_X_SELECTION',
-                'clipboard',
-            )
-            command = ['xclip', '-selection', selection]
+          """Is the current session X11 or wayland"""
+            sessionID = subprocess.run(['loginctl','--no-legend'], 
+                capture_output=True, text=True).stdout.split()[0]
+            sessionType = subprocess.run(['loginctl','show-session', sessionID,'-p','Type'], 
+                capture_output=True, text=True).stdout.strip().split('=')[1]
+            if sessionType == "wayland":
+                command = ['wl-copy']
+            else:
+                selection = os.environ.get(
+                    'PASSWORD_STORE_X_SELECTION',
+                    'clipboard',
+                )
+                command = ['xclip', '-selection', selection]
 
         p = subprocess.Popen(
             command,
