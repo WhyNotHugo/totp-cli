@@ -101,6 +101,23 @@ def add_uri(path, uri):
     totp.add_pass_entry_from_uri(path, uri)
 
 @subcommand(
+    'rm',
+    argument(
+        'identifier',
+        help='the identifier under the \'2fa\' folder where the key to remove is saved'),
+    aliases=['-r'],
+    description='Remove a TOTP entry from the database.',
+    help='remove a TOTP entry from the database')
+def _cmd_rm(args):
+    if args.uri:
+        rm_uri(args.identifier)
+    else:
+        raise ValueError('The identifier to remove was not provided')
+
+def rm_uri(path):
+    totp.rm_pass_entry(path)
+
+@subcommand(
     'show',
     argument(
         '-s',
