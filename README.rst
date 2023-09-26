@@ -120,6 +120,17 @@ You can also configure shell completion for totp-cli:
   ``_totp`` to site-functions directory (e.g.
   ``/usr/local/share/zsh/site-functions``)
 
+Usage with GitHub
+-----------------
+
+For GitHub, you may find the requested shared key by logging into your
+account, clicking on your profile photo to deploy a drop down menu, clicking
+on the "Settings" option in the drop down menu, then, in the "Access" section
+of the sidebar, click on "Password and Authentication", then, in the
+"Two-factor authentication" section of the page, click on "Enable two-factor
+authentication", and, instead of scanning the QR code, click on "setup key".
+The shared key required by `totp` will then be displayed on the screen.
+
 License
 -------
 
