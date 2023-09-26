@@ -8,7 +8,7 @@ import totp
 
 _subcommands = {}
 
-_argument = namedtuple('argument', ['args', 'kwargs'])
+_argument = namedtuple('_argument', ['args', 'kwargs'])
 def argument(*args, **kwargs):
     return _argument(args, kwargs)
 
