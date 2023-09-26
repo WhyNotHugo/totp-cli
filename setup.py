@@ -6,38 +6,36 @@ from setuptools import setup
 
 if sys.version_info < (3, 3):
     raise RuntimeError(
-        'totp-cli requires python >= 3.3, but this python is %d.%d' %
-        sys.version_info[0:2]
+        "totp-cli requires python >= 3.3, but this python is %d.%d"
+        % sys.version_info[0:2]
     )
 
 setup(
-    name='totp',
-    description='A cli based TOTP app.',
-    long_description=open('README.rst').read(),
-    author='Hugo Osvaldo Barrera',
-    author_email='hugo@barrera.io',
-    url='https://github.com/WhyNotHugo/totp-cli/',
-    license='ISC',
-    packages=['totp'],
+    name="totp",
+    description="A cli based TOTP app.",
+    long_description=open("README.rst").read(),
+    author="Hugo Osvaldo Barrera",
+    author_email="hugo@barrera.io",
+    url="https://github.com/WhyNotHugo/totp-cli/",
+    license="ISC",
+    packages=["totp"],
     entry_points={
-        'console_scripts': [
-            'totp = totp.cli:run',
+        "console_scripts": [
+            "totp = totp.cli:run",
         ]
     },
-    install_requires=[
-        open('requirements.txt').readlines()
-    ],
+    install_requires=[open("requirements.txt").readlines()],
     use_scm_version={
-        'version_scheme': 'post-release',
+        "version_scheme": "post-release",
         # 'write_to': 'totp/version.py',
     },
-    setup_requires=['setuptools_scm'],
+    setup_requires=["setuptools_scm"],
     classifiers=[
-        'Development Status :: 4 - Beta',
-        'Environment :: Console',
-        'Environment :: Console :: Curses',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: POSIX',
-        'Topic :: Utilities',
-    ]
+        "Development Status :: 4 - Beta",
+        "Environment :: Console",
+        "Environment :: Console :: Curses",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: POSIX",
+        "Topic :: Utilities",
+    ],
 )
