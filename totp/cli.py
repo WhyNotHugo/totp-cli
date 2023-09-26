@@ -109,7 +109,7 @@ def add_uri(path, uri):
     description='Remove a TOTP entry from the database.',
     help='remove a TOTP entry from the database')
 def _cmd_rm(args):
-    if args.uri:
+    if args.identifier:
         rm_uri(args.identifier)
     else:
         raise ValueError('The identifier to remove was not provided')
