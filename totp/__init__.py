@@ -71,22 +71,24 @@ def add_pass_entry(path, token_length, shared_key):
     if p.returncode != 0:
         raise PassBackendError(err)
 
+
 def rm_pass_entry(path):
     """Remove an entry via pass"""
     code_path = "2fa/{}/code"
     code_path = code_path.format(path)
 
     p = subprocess.Popen(
-        ['pass', 'rm', code_path],
+        ["pass", "rm", code_path],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
     )
 
     pass_output, err = p.communicate()
 
     if p.returncode != 0:
         raise PassBackendError(err)
+
 
 def get_pass_entry(path):
     """Return the entire entry as provided via pass."""

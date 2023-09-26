@@ -110,42 +110,55 @@ def add_interactive(path):
 def add_uri(path, uri):
     totp.add_pass_entry_from_uri(path, uri)
 
+
 @subcommand(
-    'rm',
+    "rm",
     argument(
-        'identifier',
-        help='the identifier under the \'2fa\' folder where the key to remove is saved'),
-    aliases=['-r'],
-    description='Remove a TOTP entry from the database.',
-    help='remove a TOTP entry from the database')
+        "identifier",
+        help="the identifier under the '2fa' folder where the key to remove is saved",
+    ),
+    aliases=["-r"],
+    description="Remove a TOTP entry from the database.",
+    help="remove a TOTP entry from the database",
+)
 def _cmd_rm(args):
     if args.identifier:
         rm_uri(args.identifier)
     else:
-        raise ValueError('The identifier to remove was not provided')
+        raise ValueError("The identifier to remove was not provided")
+
 
 def rm_uri(path):
     totp.rm_pass_entry(path)
 
+
 @subcommand(
-    'show',
+    "show",
     argument(
-        '-s',
-        dest='offset_seconds',
-        metavar='SECONDS',
+        "-s",
+        dest="offset_seconds",
+        metavar="SECONDS",
         default=0,
-        help='offset the clock by the given number of seconds'),
+        help="offset the clock by the given number of seconds",
+    ),
     argument(
-        '-n', '--nocopy',
+        "-n",
+        "--nocopy",
         action="store_true",
-        help='Do not copy the token, only show it.'),
+        help="Do not copy the token, only show it.",
+    ),
     argument(
-        'identifier',
-        help='the identifier by which the key can be found under the \'2fa\' folder'),
-    description='Show the current TOTP token for a registered entry.',
-    help='(default action) show the current TOTP token for a registered entry')
+        "identifier",
+        help="the identifier by which the key can be found under the '2fa' folder",
+    ),
+    description="Show the current TOTP token for a registered entry.",
+    help="(default action) show the current TOTP token for a registered entry",
+)
 def _cmd_show(args):
-    totp.generate_token(args.identifier, seconds=args.offset_seconds, to_clipboard=not args.nocopy)
+    totp.generate_token(
+        args.identifier, seconds=args.offset_seconds, to_clipboard=not args.nocopy
+    )
+
 
 @subcommand(
     "show",
