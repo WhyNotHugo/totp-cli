@@ -160,33 +160,5 @@ def _cmd_show(args):
     )
 
 
-@subcommand(
-    "show",
-    argument(
-        "-s",
-        dest="offset_seconds",
-        metavar="SECONDS",
-        default=0,
-        help="offset the clock by the given number of seconds",
-    ),
-    argument(
-        "-n",
-        "--nocopy",
-        action="store_true",
-        help="Do not copy the token, only show it.",
-    ),
-    argument(
-        "identifier",
-        help="the identifier by which the key can be found under the '2fa' folder",
-    ),
-    description="Show the current TOTP token for a registered entry.",
-    help="(default action) show the current TOTP token for a registered entry",
-)
-def _cmd_show(args):
-    totp.generate_token(
-        args.identifier, seconds=args.offset_seconds, to_clipboard=not args.nocopy
-    )
-
-
 if __name__ == "__main__":
     run()
