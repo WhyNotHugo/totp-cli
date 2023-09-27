@@ -1,1 +1,2 @@
+click
 onetimepass==1.0.1
