@@ -1,5 +1,6 @@
 import argparse
 import getpass
+import click
 import sys
 from base64 import b32decode
 from collections import namedtuple
@@ -109,6 +110,29 @@ def add_interactive(path):
 
 def add_uri(path, uri):
     totp.add_pass_entry_from_uri(path, uri)
+
+
+@subcommand(
+    "rm",
+    argument(
+        "identifier",
+        help="the identifier under the '2fa' folder where the key to remove is saved",
+    ),
+    aliases=["-r"],
+    description="Remove a TOTP entry from the database.",
+    help="remove a TOTP entry from the database",
+)
+def _cmd_rm(args):
+    if args.identifier:
+        if click.confirm('Do you really want to remove a shared secret TOTP key ?'):
+            print("OK. Living dangerously, aren't we ? Removing at your behest.")
+            rm_uri(args.identifier)
+    else:
+        raise ValueError("The identifier to remove was not provided")
+
+
+def rm_uri(path):
+    totp.rm_pass_entry(path)
 
 
 @subcommand(
