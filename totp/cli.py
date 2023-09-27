@@ -1,5 +1,6 @@
 import argparse
 import getpass
+import click
 import sys
 from base64 import b32decode
 from collections import namedtuple
@@ -123,7 +124,9 @@ def add_uri(path, uri):
 )
 def _cmd_rm(args):
     if args.identifier:
-        rm_uri(args.identifier)
+        if click.confirm('Do you really want to remove a shared secret TOTP key ?'):
+            print("OK. Living dangerously, aren't we ? Removing at your behest.")
+            rm_uri(args.identifier)
     else:
         raise ValueError("The identifier to remove was not provided")
 
