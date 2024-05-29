@@ -114,11 +114,17 @@ def copy_to_clipboard(text):
         elif platform.system() == "Windows":
             command = ["clip"]
         else:
-            selection = os.environ.get(
+            clipboard_type = os.environ.get(
                 "PASSWORD_STORE_X_SELECTION",
                 "clipboard",
             )
-            command = ["xclip", "-selection", selection]
+            session_type = os.environ.get("XDG_SESSION_TYPE")
+            if session_type == "wayland":
+                command = ["wl-copy"]
+                if clipboard_type == "primary":
+                    command.append("--primary")
+            else:
+                command = ["xclip", "-selection", clipboard_type]
 
         p = subprocess.Popen(
             command,
