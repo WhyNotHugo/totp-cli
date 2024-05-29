@@ -118,8 +118,7 @@ def copy_to_clipboard(text):
                 "PASSWORD_STORE_X_SELECTION",
                 "clipboard",
             )
-            session_type = os.environ.get("XDG_SESSION_TYPE")
-            if session_type == "wayland":
+            if "WAYLAND_DISPLAY" in os.environ:
                 command = ["wl-copy"]
                 if clipboard_type == "primary":
                     command.append("--primary")
