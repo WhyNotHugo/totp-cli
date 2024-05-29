@@ -99,6 +99,7 @@ There are also some platform-specific requirements for copying code into the
 clipboard:
 
 * `xclip <http://sourceforge.net/projects/xclip>`_ for Xorg (Linux/BSD).
+* `wl-clipboard <https://github.com/bugaevc/wl-clipboard>`_ for Wayland (Linux/BSD).
 
 Installation
 ------------
