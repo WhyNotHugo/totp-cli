@@ -131,6 +131,18 @@ of the sidebar, click on "Password and Authentication", then, in the
 authentication", and, instead of scanning the QR code, click on "setup key".
 The shared key required by `totp` will then be displayed on the screen.
 
+Security considerations
+-----------------------
+
+If a TOTP shared secret is stored in the same storage as a password, both
+factors rely on the security of the same storage. This negates the values of
+the second factor authentication; both factors share a same point of failure.
+E.g.: if the secret storage's security is compromised, both factors are exposed
+together.
+
+Storing both factors on the same storage should only be done when using
+dedicated hardware devices is not possible (e.g.: due to lack of access to one).
+
 License
 -------
 
