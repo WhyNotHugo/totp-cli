@@ -2,8 +2,10 @@ import argparse
 import getpass
 import click
 import sys
+import subprocess
 from base64 import b32decode
 from collections import namedtuple
+from importlib.metadata import version, PackageNotFoundError
 
 import totp
 
@@ -11,6 +13,28 @@ _subcommands = {}
 
 _argument = namedtuple("_argument", ["args", "kwargs"])
 
+from importlib.metadata import version, PackageNotFoundError
+
+def get_version():
+    # 1. Try installed distribution (pip/pipx)
+    try:
+        return version("totp")
+    except PackageNotFoundError:
+        pass
+
+    # 2. Try __version__ from version.py or __init__.py
+    try:
+        from .version import __version__  # setuptools_scm can generate this
+        return __version__
+    except ImportError:
+        try:
+            from . import __version__  # fallback if you put it in __init__.py
+            return __version__
+        except ImportError:
+            pass
+
+    # 3. Last-resort fallback
+    return "unknown"
 
 def argument(*args, **kwargs):
     return _argument(args, kwargs)
@@ -24,9 +48,24 @@ def subcommand(name, *args, **kwargs):
 
 
 def _parse_args(args):
+    pkg_version = get_version()
+
     parser = argparse.ArgumentParser(
-        description="Print a TOTP token getting the shared key from pass(1)."
+        description="""Print a TOTP token getting the shared key from pass(1).""",
+        epilog=f"""totp-cli v. {pkg_version} is a python utility for providing one-time passwords.
+See https://github.com/WhyNotHugo/totp-cli for more information.
+\n
+""",
+    formatter_class=argparse.RawDescriptionHelpFormatter
     )
+
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"totp-cli v. {pkg_version}",
+    )
+
 
     subparsers = parser.add_subparsers(dest="command")
     aliases = {}
@@ -48,7 +87,7 @@ def _parse_args(args):
 
     def add_default_subcommand_if_omitted(args, default):
         if not any(
-            arg in ("-h", "--help") or arg in subparsers.choices for arg in args
+            arg in ("-h", "--help", "--version") or arg in subparsers.choices for arg in args
         ):
             args.insert(0, default)
 

@@ -27,7 +27,7 @@ setup(
     install_requires=[open("requirements.txt").readlines()],
     use_scm_version={
         "version_scheme": "post-release",
-        # 'write_to': 'totp/version.py',
+        "write_to": "totp/version.py",
     },
     setup_requires=["setuptools_scm"],
     classifiers=[
